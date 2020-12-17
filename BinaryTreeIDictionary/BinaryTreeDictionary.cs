@@ -78,21 +78,26 @@ namespace BinaryTreeIDictionary
             }
         }
 
-        
-
         public bool Remove(Tkey key)
         {
-            throw new NotImplementedException();
+            return tree.Remove(key);
         }
 
         public bool Remove(KeyValuePair<Tkey, Tvalue> item)
         {
-            throw new NotImplementedException();
+            return tree.Remove(item.Key);
         }
 
         public bool TryGetValue(Tkey key, [MaybeNullWhen(false)] out Tvalue value)
         {
-            throw new NotImplementedException();
+            var node = tree.Find(key);
+            value = default;
+            if (node != null)
+            {
+                value = node.KeyValuePair.Value;
+                return true;
+            }
+            return false;
         }
 
         public IEnumerator<KeyValuePair<Tkey, Tvalue>> GetEnumerator()

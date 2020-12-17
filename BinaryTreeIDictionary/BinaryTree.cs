@@ -96,5 +96,90 @@ namespace BinaryTreeIDictionary
 
             return null;
         }
+
+        public bool Remove(Tkey key)
+        {
+            //var currentNode = root;
+            var currentNode = Find(key);
+            if (currentNode == null)
+                return false;
+
+            if (currentNode.Left == null && currentNode.Right == null)
+            {
+                if (currentNode.Parent == null)
+                {
+                    root = null;
+                }
+                else if (currentNode.Parent.Left == currentNode)
+                {
+                    currentNode.Parent.Left = null;
+                }
+                else
+                {
+                    currentNode.Parent.Right = null;
+                }
+
+                return true;
+            }
+
+            if (currentNode.Left == null)
+            {
+                currentNode.Right.Parent = currentNode.Parent;
+
+                if (currentNode.Parent == null)
+                {
+                    root = currentNode.Right;
+                }
+                else if (currentNode.Parent.Left == currentNode)
+                {
+                    currentNode.Parent.Left = currentNode.Right;
+                }
+                else
+                {
+                    currentNode.Parent.Right = currentNode.Right;
+                }
+
+                return true;
+            }
+
+            if (currentNode.Right == null)
+            {
+                currentNode.Left.Parent = currentNode.Parent;
+
+                if (currentNode.Parent == null)
+                {
+                    root = currentNode.Left;
+                }
+                else if (currentNode.Parent.Left == currentNode)
+                {
+                    currentNode.Parent.Left = currentNode.Left;
+                }
+                else
+                {
+                    currentNode.Parent.Right = currentNode.Left;
+                }
+
+                return true;
+            }
+
+            var leftmostNode = currentNode.Right;
+            while (leftmostNode.Left != null)
+            {
+                leftmostNode = leftmostNode.Left;
+            }
+
+            currentNode.KeyValuePair = leftmostNode.KeyValuePair;
+            if (leftmostNode.Right == null)
+            {
+                leftmostNode.Parent.Left = null;
+            }
+            else
+            {
+                leftmostNode.Parent.Left = leftmostNode.Right;
+                leftmostNode.Right.Parent = leftmostNode.Parent;
+            }
+
+            return true;
+        }
     }
 }
