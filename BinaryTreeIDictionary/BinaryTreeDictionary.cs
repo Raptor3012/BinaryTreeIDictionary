@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace BinaryTreeIDictionary
 {
@@ -10,32 +11,45 @@ namespace BinaryTreeIDictionary
     {
         private BinaryTree<Tkey, Tvalue> tree = new BinaryTree<Tkey, Tvalue>();
 
-        
-        public Tvalue this[Tkey key] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public ICollection<Tkey> Keys => throw new NotImplementedException();
+        public Tvalue this[Tkey key] { get => tree.Find(key).KeyValuePair.Value;
+            set
+            {
+                var node = tree.Find(key);
+                if (node == null)
+                    Add(key, value);
+                else
+                    node.KeyValuePair = new KeyValuePair<Tkey, Tvalue>(key, value);
+            } }
 
-        public ICollection<Tvalue> Values => throw new NotImplementedException();
+        public ICollection<Tkey> Keys => tree.Traverse().Select(node => node.KeyValuePair.Key).ToList();
 
-        public int Count => throw new NotImplementedException();
+        public ICollection<Tvalue> Values => tree.Traverse().Select(node => node.KeyValuePair.Value).ToList();
+
+        //public int Count { get; private set; }
+        public int Count => tree.Traverse().Count();
 
         public bool IsReadOnly => false;
 
         public void Add(Tkey key, Tvalue value)
         {
-            //throw new NotImplementedException();
             var KeyValuePair = new KeyValuePair<Tkey, Tvalue>(key, value);
-            this.tree.Add(KeyValuePair);
+            tree.Add(KeyValuePair);
+            //if (tree.Add(KeyValuePair))
+            //Count++;
         }
 
         public void Add(KeyValuePair<Tkey, Tvalue> item)
         {
-            this.tree.Add(item);
+            tree.Add(item);
+            //if (tree.Add(item))
+            //Count++;
         }
 
         public void Clear()
         {
             tree = new BinaryTree<Tkey, Tvalue>();
+            //Count = 0;
         }
 
         public bool Contains(KeyValuePair<Tkey, Tvalue> item)
@@ -47,20 +61,24 @@ namespace BinaryTreeIDictionary
         public bool ContainsKey(Tkey key)
         {
             var currentNode = tree.Find(key);
-            if (currentNode != null)
-                return true;
-            else return false;
+            return currentNode != null;
         }
 
         public void CopyTo(KeyValuePair<Tkey, Tvalue>[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            if (array.Length < arrayIndex + Count)
+            {
+                throw new ArgumentException(
+                    "The length of the current array is not enough to copy the elements of the collection!");
+            }
+            foreach (var node in tree.Traverse())
+            {
+                array[arrayIndex] = node.KeyValuePair;
+                arrayIndex++;
+            }
         }
 
-        public IEnumerator<KeyValuePair<Tkey, Tvalue>> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public bool Remove(Tkey key)
         {
@@ -77,9 +95,16 @@ namespace BinaryTreeIDictionary
             throw new NotImplementedException();
         }
 
+        public IEnumerator<KeyValuePair<Tkey, Tvalue>> GetEnumerator()
+        {
+            return tree.Traverse()
+                .Select(node => node.KeyValuePair)
+                .GetEnumerator();
+        }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return GetEnumerator();
         }
     }
 }

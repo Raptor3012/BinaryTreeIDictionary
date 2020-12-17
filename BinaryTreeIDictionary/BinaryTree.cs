@@ -8,6 +8,25 @@ namespace BinaryTreeIDictionary
     {
         private Node<Tkey, Tvalue> root;
 
+        public IEnumerable<Node<Tkey, Tvalue>> Traverse()
+        {
+            return TraverseNode(root);
+        }
+
+        private IEnumerable<Node<Tkey, Tvalue>> TraverseNode(Node<Tkey, Tvalue> currentNode)
+        {
+            if (currentNode == null)
+                yield break;
+
+            foreach (var node in TraverseNode(currentNode.Left))
+                yield return node;
+
+            yield return currentNode;
+
+            foreach (var node in TraverseNode(currentNode.Right))
+                yield return node;
+        }
+
         public bool Add(KeyValuePair<Tkey, Tvalue> item)
         {
             var currentNode = root;
