@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace BinaryTreeIDictionary
 {
+    [Serializable]
     class BinaryTree<Tkey, Tvalue>
         where Tkey : IComparable
     {

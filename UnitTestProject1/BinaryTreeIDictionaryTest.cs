@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BinaryTreeIDictionary;
-namespace UnitTestProject1
+namespace BinaryTreeIDictionaryTest
 {
     [TestClass]
     public class BinaryTreeIDictionaryTest

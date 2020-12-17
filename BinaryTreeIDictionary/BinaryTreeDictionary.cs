@@ -6,7 +6,8 @@ using System.Linq;
 
 namespace BinaryTreeIDictionary
 {
-    class BinaryTreeDictionary<Tkey, Tvalue> : IDictionary<Tkey, Tvalue>
+    [Serializable]
+    public class BinaryTreeDictionary<Tkey, Tvalue> : IDictionary<Tkey, Tvalue>
         where Tkey : IComparable
     {
         private BinaryTree<Tkey, Tvalue> tree = new BinaryTree<Tkey, Tvalue>();
@@ -55,7 +56,7 @@ namespace BinaryTreeIDictionary
         public bool Contains(KeyValuePair<Tkey, Tvalue> item)
         {
             var currentNode = tree.Find(item.Key);
-            return currentNode != null && currentNode.KeyValuePair.Equals(item.Value);
+            return currentNode != null && currentNode.KeyValuePair.Value.Equals(item.Value);
         }
 
         public bool ContainsKey(Tkey key)

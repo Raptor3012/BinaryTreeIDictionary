@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace BinaryTreeIDictionary
 {
+    [Serializable]
     class Node<Tkey, Tvalue> where Tkey :IComparable
     {
         public KeyValuePair<Tkey,Tvalue> KeyValuePair { get; set; }
