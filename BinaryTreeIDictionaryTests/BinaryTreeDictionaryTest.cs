@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace BinaryTreeIDictionaryTests
 {
+    
     [TestClass]
     public class BinaryTreeDictionaryTest
     {

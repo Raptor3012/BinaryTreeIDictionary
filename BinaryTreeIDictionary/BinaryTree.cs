@@ -8,24 +8,25 @@ namespace BinaryTreeIDictionary
         where Tkey : IComparable
     {
         private Node<Tkey, Tvalue> root;
+        
 
-        public IEnumerable<Node<Tkey, Tvalue>> Traverse()
+        public IEnumerable<KeyValuePair<Tkey, Tvalue>> Traverse()
         {
             return TraverseNode(root);
         }
 
-        private IEnumerable<Node<Tkey, Tvalue>> TraverseNode(Node<Tkey, Tvalue> currentNode)
+        private IEnumerable<KeyValuePair<Tkey, Tvalue>> TraverseNode(Node<Tkey, Tvalue> currentNode)
         {
             if (currentNode == null)
                 yield break;
 
-            foreach (var node in TraverseNode(currentNode.Left))
-                yield return node;
+            foreach (var keyValuePair in TraverseNode(currentNode.Left))
+                yield return keyValuePair;
 
-            yield return currentNode;
+            yield return currentNode.KeyValuePair;
 
-            foreach (var node in TraverseNode(currentNode.Right))
-                yield return node;
+            foreach (var keyValuePair in TraverseNode(currentNode.Right))
+                yield return keyValuePair;
         }
 
         public bool Add(KeyValuePair<Tkey, Tvalue> item)
@@ -75,7 +76,7 @@ namespace BinaryTreeIDictionary
             return true;
         }
 
-        public Node<Tkey,Tvalue> Find(Tkey key)
+        public KeyValuePair<Tkey,Tvalue> Find(Tkey key)
         {
             var currentNode = root;
             while (currentNode != null)
@@ -91,17 +92,33 @@ namespace BinaryTreeIDictionary
                 }
                 else
                 {
-                    return currentNode;
+                    return currentNode.KeyValuePair;
                 }
             }
 
-            return null;
+            return new KeyValuePair<Tkey, Tvalue>();
         }
 
         public bool Remove(Tkey key)
         {
-            //var currentNode = root;
-            var currentNode = Find(key);
+            var currentNode = root;
+            while (currentNode != null)
+            {
+                var compareResult = key.CompareTo(currentNode.KeyValuePair.Key);
+                if (compareResult < 0)
+                {
+                    currentNode = currentNode.Left;
+                }
+                else if (compareResult > 0)
+                {
+                    currentNode = currentNode.Right;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
             if (currentNode == null)
                 return false;
 

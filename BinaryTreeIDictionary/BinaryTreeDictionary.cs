@@ -13,19 +13,19 @@ namespace BinaryTreeIDictionary
         private BinaryTree<Tkey, Tvalue> tree = new BinaryTree<Tkey, Tvalue>();
 
 
-        public Tvalue this[Tkey key] { get => tree.Find(key).KeyValuePair.Value;
+        public Tvalue this[Tkey key] { get => tree.Find(key).Value;
             set
             {
-                var node = tree.Find(key);
-                if (node == null)
+                var keyValuePair = tree.Find(key);
+                if (keyValuePair.Equals(new KeyValuePair<Tkey, Tvalue>()))
                     Add(key, value);
                 else
-                    node.KeyValuePair = new KeyValuePair<Tkey, Tvalue>(key, value);
+                    keyValuePair = new KeyValuePair<Tkey, Tvalue>(key, value);
             } }
 
-        public ICollection<Tkey> Keys => tree.Traverse().Select(node => node.KeyValuePair.Key).ToList();
+        public ICollection<Tkey> Keys => tree.Traverse().Select(keyValuePair => keyValuePair.Key).ToList();
 
-        public ICollection<Tvalue> Values => tree.Traverse().Select(node => node.KeyValuePair.Value).ToList();
+        public ICollection<Tvalue> Values => tree.Traverse().Select(keyValuePair => keyValuePair.Value).ToList();
 
         //public int Count { get; private set; }
         public int Count => tree.Traverse().Count();
@@ -55,14 +55,14 @@ namespace BinaryTreeIDictionary
 
         public bool Contains(KeyValuePair<Tkey, Tvalue> item)
         {
-            var currentNode = tree.Find(item.Key);
-            return currentNode != null && currentNode.KeyValuePair.Value.Equals(item.Value);
+            var currentKeyValuePair = tree.Find(item.Key);
+            return !currentKeyValuePair.Equals(new KeyValuePair<Tkey, Tvalue>()) && currentKeyValuePair.Value.Equals(item.Value);
         }
 
         public bool ContainsKey(Tkey key)
         {
-            var currentNode = tree.Find(key);
-            return currentNode != null;
+            var currentKeyValuePair = tree.Find(key);
+            return !currentKeyValuePair.Equals(new KeyValuePair<Tkey, Tvalue>());
         }
 
         public void CopyTo(KeyValuePair<Tkey, Tvalue>[] array, int arrayIndex)
@@ -72,9 +72,9 @@ namespace BinaryTreeIDictionary
                 throw new ArgumentException(
                     "The length of the current array is not enough to copy the elements of the collection!");
             }
-            foreach (var node in tree.Traverse())
+            foreach (var keyValuePair in tree.Traverse())
             {
-                array[arrayIndex] = node.KeyValuePair;
+                array[arrayIndex] = keyValuePair;
                 arrayIndex++;
             }
         }
@@ -91,11 +91,11 @@ namespace BinaryTreeIDictionary
 
         public bool TryGetValue(Tkey key, [MaybeNullWhen(false)] out Tvalue value)
         {
-            var node = tree.Find(key);
+            var keyValuePair = tree.Find(key);
             value = default;
-            if (node != null)
+            if (keyValuePair.Equals(new KeyValuePair<Tkey, Tvalue>()))
             {
-                value = node.KeyValuePair.Value;
+                value = keyValuePair.Value;
                 return true;
             }
             return false;
@@ -104,7 +104,7 @@ namespace BinaryTreeIDictionary
         public IEnumerator<KeyValuePair<Tkey, Tvalue>> GetEnumerator()
         {
             return tree.Traverse()
-                .Select(node => node.KeyValuePair)
+                .Select(keyValuePair => keyValuePair)
                 .GetEnumerator();
         }
 

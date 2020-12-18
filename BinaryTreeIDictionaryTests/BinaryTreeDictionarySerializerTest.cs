@@ -35,11 +35,7 @@ namespace BinaryTreeIDictionaryTests
             stream.Position = 0;
             var newDictionary = serializer.Load<int, string>(name);
 
-            var listKeyDict = dictionary.Keys;
-            var listKeyNewDict = newDictionary.Keys;
-
-            Assert.AreEqual("[3,5,7,9,11]", serializer);
-            //CollectionAssert.AreEqual(listKeyDict, listKeyNewDict);
+            Assert.AreEqual(dictionary.ToString(), newDictionary.ToString());
         }
 
         [TestMethod]
@@ -65,8 +61,7 @@ namespace BinaryTreeIDictionaryTests
 
             var serialized = Encoding.ASCII.GetString(stream.ToArray());
 
-            Assert.AreEqual(test, serialized);
-            CollectionAssert.AreEqual(test, serialized);
+            Assert.AreEqual(dictionary.ToString(), serialized); ;
         }
     }
 }
