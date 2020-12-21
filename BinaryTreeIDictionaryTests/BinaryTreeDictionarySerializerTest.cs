@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BinaryTreeIDictionary;
 using Moq;
 using System.IO;
+using System.Linq;
 
 namespace BinaryTreeIDictionaryTests
 {
@@ -35,7 +36,7 @@ namespace BinaryTreeIDictionaryTests
             stream.Position = 0;
             var newDictionary = serializer.Load<int, string>(name);
 
-            Assert.AreEqual(dictionary.ToString(), newDictionary.ToString());
+            CollectionAssert.AreEquivalent(dictionary.ToList(), newDictionary.ToList());
         }
 
         [TestMethod]
@@ -61,7 +62,7 @@ namespace BinaryTreeIDictionaryTests
 
             var serialized = Encoding.ASCII.GetString(stream.ToArray());
 
-            Assert.AreEqual(dictionary.ToString(), serialized); ;
+            Assert.AreEqual(@"[{""Key"":3,""Value"":""three""},{""Key"":4,""Value"":""four""},{""Key"":6,""Value"":""six""},{""Key"":8,""Value"":""eight""}]", serialized); ;
         }
     }
 }
